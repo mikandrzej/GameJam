@@ -1,20 +1,26 @@
 import pygame
 import random
 
-from color import BLUE, BLACK
-from properties import FPS, GAME_TITLE
+import color
+from properties import Properties
 from state import State
+from views.shelf import Shelf
 
 
 class Game:
-    def __init__(self, width: int, height: int):
+    def __init__(self, properties: Properties):
+        self.properties = properties
         self.state = State()
         ## initialize pygame and create window
         pygame.init()
         pygame.mixer.init()  ## For sound
-        self.screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
-        pygame.display.set_caption(GAME_TITLE)
+        self.screen = pygame.display.set_mode((properties.WIDTH,
+                                               properties.HEIGHT),
+                                              pygame.RESIZABLE)
+        pygame.display.set_caption(properties.GAME_TITLE)
         self.clock = pygame.time.Clock()  ## For syncing the FPS
+
+        self.shelf = Shelf(self.properties)
 
     def handleEvents(self):
         # 1 Process input/events
@@ -32,8 +38,8 @@ class Game:
 
     def draw(self):
         # 3 Draw/render
-        self.screen.fill(BLACK)
-        pygame.draw.rect(self.screen, BLUE, (200, 150, 100, 50))
+        self.screen.fill(color.WHITE)
+        self.shelf.draw(self.screen)
         # all_sprites.draw(screen)
         ########################
 
@@ -41,7 +47,7 @@ class Game:
         ## Game loop
         self.state.running = True
         while self.state.running:
-            self.clock.tick(FPS)  ## will make the loop run at the same speed all the time
+            self.clock.tick(self.properties.FPS)  ## will make the loop run at the same speed all the time
             self.handleEvents()
             self.update()
             self.draw()

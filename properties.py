@@ -1,4 +1,6 @@
-WIDTH = 360
-HEIGHT = 480
-FPS = 30
-GAME_TITLE = "<Your game>"
+class Properties:
+    def __init__(self):
+        self.WIDTH = 1366
+        self.HEIGHT = 768
+        self.FPS = 30
+        self.GAME_TITLE = "<Your game>"
