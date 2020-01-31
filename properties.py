@@ -4,3 +4,4 @@ class Properties:
         self.HEIGHT = 768
         self.FPS = 30
         self.GAME_TITLE = "<Your game>"
+        self.delta = 0.0
