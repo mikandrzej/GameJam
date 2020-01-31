@@ -1,0 +1,4 @@
+WIDTH = 360
+HEIGHT = 480
+FPS = 30
+GAME_TITLE = "<Your game>"
