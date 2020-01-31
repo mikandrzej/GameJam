@@ -3,8 +3,9 @@
 import pygame
 import random
 
-WIDTH = 360
-HEIGHT = 480
+from properties import Properties
+from views.shelf import Shelf
+
 FPS = 30
 
 # Define Colors
@@ -15,15 +16,17 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
 ## initialize pygame and create window
+properties = Properties()
 pygame.init()
 pygame.mixer.init()  ## For sound
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((properties.WIDTH, properties.HEIGHT))
 pygame.display.set_caption("<Your game>")
 clock = pygame.time.Clock()  ## For syncing the FPS
 
 ## group all the sprites together for ease of update
 # all_sprites = pygame.sprite.group()
 
+shelf = Shelf(properties)
 ## Game loop
 running = True
 while running:
@@ -39,8 +42,8 @@ while running:
     # all_sprites.update()
 
     # 3 Draw/render
-    screen.fill(BLACK)
-
+    screen.fill(WHITE)
+    shelf.draw(screen)
     # all_sprites.draw(screen)
     ########################
 
