@@ -4,7 +4,7 @@ import random
 import color
 from properties import Properties
 from state import State
-from views.shelf import Shelf
+from views.bookstand import Bookstand
 
 
 class Game:
@@ -20,7 +20,7 @@ class Game:
         pygame.display.set_caption(properties.GAME_TITLE)
         self.clock = pygame.time.Clock()  ## For syncing the FPS
 
-        self.shelf = Shelf(self.properties)
+        self.bookstand = Bookstand(self.properties)
 
     def handleEvents(self):
         # 1 Process input/events
@@ -39,7 +39,7 @@ class Game:
     def draw(self):
         # 3 Draw/render
         self.screen.fill(color.WHITE)
-        self.shelf.draw(self.screen)
+        self.bookstand.draw(self.screen)
         # all_sprites.draw(screen)
         ########################
 

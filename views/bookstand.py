@@ -2,7 +2,7 @@ import pygame
 
 from properties import Properties
 
-class Shelf:
+class Bookstand:
     POS_X = 0.2
     POS_Y = 0.2
     WIDTH = 0.6
@@ -17,12 +17,18 @@ class Shelf:
         self._drawShelf(surface)
 
     def _drawShelf(self, surface: pygame.Surface):
-        shelf = pygame.Rect(self.POS_X * self.properties.WIDTH,
+        bookstand = pygame.Rect(self.POS_X * self.properties.WIDTH,
                             self.POS_X * self.properties.HEIGHT,
                             self.WIDTH * self.properties.WIDTH,
                             self.HEIGHT * self.properties.HEIGHT
                             )
-        pygame.draw.rect(surface, self.COLOR, shelf)
+        pygame.draw.rect(surface, self.COLOR, bookstand)
+        bookstand = pygame.Rect(self.POS_X * self.properties.WIDTH,
+                            self.POS_X * self.properties.HEIGHT,
+                            self.WIDTH * self.properties.WIDTH,
+                            self.HEIGHT * self.properties.HEIGHT
+                            )
+        pygame.draw.rect(surface, self.COLOR, bookstand)
 
 
 
