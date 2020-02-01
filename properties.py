@@ -12,3 +12,5 @@ class Properties:
         self.menuTitleFontSize = 90
         self.labelControllerSelectionFont = self.menuOptionsFont
         self.labelControllerSelectionSize = 25
+        self.labelPuzzleProgressFont = self.menuOptionsFont
+        self.labelPuzzleProgressSize = 20

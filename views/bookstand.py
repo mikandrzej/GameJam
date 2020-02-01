@@ -27,7 +27,7 @@ class Bookstand:
     SELECTED_RECT_WIDTH = 0.01
 
     def __init__(self, properties: Properties, state: State):
-        self.properties = properties
+        self._properties = properties
         self._scrWidth = properties.WIDTH
         self._scrHeight = properties.HEIGHT
         self._state = state
@@ -35,7 +35,7 @@ class Bookstand:
         objects = []
         for x in range(self.OBJECTS_ON_SHELF * self.SHELFS):
             rand = random.randrange(len(OBJECTS))
-            object = OBJECTS[rand](self.properties, self._state)
+            object = OBJECTS[rand](self._properties, self._state)
             objects.append(object)
         self._objects = objects
 
@@ -63,11 +63,11 @@ class Bookstand:
         for y in range(self.OBJECTS_ON_SHELF * self.SHELFS):
             self._objPositionsY.append(self._shelfPositionsY[y // self.OBJECTS_ON_SHELF] + self.OBJECT_OFFSET)
 
-        self._scaledImgBookstand = pygame.transform.scale(self._imgBookstand, (int(self.WIDTH * self.properties.WIDTH),
-                                                                               int(self.HEIGHT * self.properties.HEIGHT)))
+        self._scaledImgBookstand = pygame.transform.scale(self._imgBookstand, (int(self.WIDTH * self._properties.WIDTH),
+                                                                               int(self.HEIGHT * self._properties.HEIGHT)))
         for obj in self._objects:
-            obj._scaledIcon = pygame.transform.scale(obj.ICON, (int(self._objectWidth * self.properties.WIDTH),
-                                                                               int(self._objectHeight * self.properties.HEIGHT)))
+            obj._scaledIcon = pygame.transform.scale(obj.ICON, (int(self._objectWidth * self._properties.WIDTH),
+                                                                               int(self._objectHeight * self._properties.HEIGHT)))
     def draw(self, surface: pygame.Surface):
         if self._state.gameState == GameState.SHELF:
             self._drawShelf(surface)
@@ -93,30 +93,30 @@ class Bookstand:
 
 
     def _drawShelf(self, surface: pygame.Surface):
-        area = pygame.Rect(self.POS_X * self.properties.WIDTH,
-                           self.POS_Y * self.properties.HEIGHT,
-                           self.WIDTH * self.properties.WIDTH,
-                           self.HEIGHT * self.properties.HEIGHT)
+        area = pygame.Rect(self.POS_X * self._properties.WIDTH,
+                           self.POS_Y * self._properties.HEIGHT,
+                           self.WIDTH * self._properties.WIDTH,
+                           self.HEIGHT * self._properties.HEIGHT)
         surface.blit(self._scaledImgBookstand, area)
 
 
     def _drawObjects(self, surface: pygame.Surface):
         for ind, obj in enumerate(self._objects):
-            area = pygame.Rect(self._objPositionsX[ind] * self.properties.WIDTH,
-                               self._objPositionsY[ind] * self.properties.HEIGHT,
-                               self._objectWidth * self.properties.WIDTH,
-                               self._objectHeight * self.properties.HEIGHT)
+            area = pygame.Rect(self._objPositionsX[ind] * self._properties.WIDTH,
+                               self._objPositionsY[ind] * self._properties.HEIGHT,
+                               self._objectWidth * self._properties.WIDTH,
+                               self._objectHeight * self._properties.HEIGHT)
             # objSurface = pygame.Surface((area.width, area.height))
             # obj.draw(objSurface)
             surface.blit(obj._scaledIcon, area)
             if self._selectedObject == ind:
-                rect = pygame.Rect((self._objPositionsX[ind] - self.SELECTED_RECT_OFFSET) * self.properties.WIDTH,
-                                    (self._objPositionsY[ind] - self.SELECTED_RECT_OFFSET) * self.properties.HEIGHT,
-                                    (self._objectWidth + self.SELECTED_RECT_OFFSET * 2) * self.properties.WIDTH,
-                                    (self._objectHeight + self.SELECTED_RECT_OFFSET * 2) * self.properties.HEIGHT
-                                    )
+                rect = pygame.Rect((self._objPositionsX[ind] - self.SELECTED_RECT_OFFSET) * self._properties.WIDTH,
+                                   (self._objPositionsY[ind] - self.SELECTED_RECT_OFFSET) * self._properties.HEIGHT,
+                                   (self._objectWidth + self.SELECTED_RECT_OFFSET * 2) * self._properties.WIDTH,
+                                   (self._objectHeight + self.SELECTED_RECT_OFFSET * 2) * self._properties.HEIGHT
+                                   )
                 pygame.draw.rect(surface, color.COL_SELECTED, rect, 5)
 
     def recalculatePositions(self):
-        if self._scrWidth != self.properties.WIDTH or self._scrHeight != self.properties.HEIGHT:
+        if self._scrWidth != self._properties.WIDTH or self._scrHeight != self._properties.HEIGHT:
             self._calculateCoordinates()
