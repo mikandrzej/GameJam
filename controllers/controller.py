@@ -8,6 +8,8 @@ class Controller:
     INP_DOWN = 4
     INP_LEFT = 8
     INP_ACCEPT = 16
+    INP_STICK_STILL = 32
+    CONTROLLERS = ("Gamepad", "Drums", "Guitar")
 
     def __init__(self):
         self.joystick = None

@@ -53,11 +53,8 @@ class InputHandler:
         return self.genericButtons
 
     def setController(self, whichController):
-        if whichController[0] == "GamePad":
-            self.gamepad.setJoystick(whichController[1])
-        elif whichController[0] == "Drums":
-            self.drums.setJoystick(whichController[1])
-        elif whichController[0] == "Guitar":
-            self.guitar.setJoystick(whichController[1])
+        targetGamepad = next(x for x in [self.gamepad, self.drums, self.guitar] if x.label == whichController[0])
+        targetGamepad.setJoystick(next(x for x in self.joysticks if x.get_id() == whichController[1]))
+        targetGamepad.initState = False
 
 

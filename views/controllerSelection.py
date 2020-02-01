@@ -29,7 +29,6 @@ class ControllerSelection:
         self.images = [self._imgGamepad, self._imgBand, self._imgGuitar]
         self.scaledImages = [self._scaledImgGamepad, self._scaledImgBand, self._scaledImgGuitar]
         self.labels = ["Please press button on a Game Pad", "Please hit a Drum", "Please press button on a Guitar"]
-        self.controllers = ["GamePad", "Drums", "Guitar"]
         self.blockWidth = 0
         self.labelFont = pygame.font.Font(self.properties.labelControllerSelectionFont, self.properties.labelControllerSelectionSize)
         self.labelY = 0
@@ -45,7 +44,7 @@ class ControllerSelection:
         if any(controller.getActiveJoysticks()):
             joyId = next(i for i, v in enumerate(controller.getActiveJoysticks()) if v)
             if joyId not in self.collectedControllers:
-                controller.setController((self.controllers[self.waitingForInputFrom], joyId))
+                controller.setController((Controller.CONTROLLERS[self.waitingForInputFrom], joyId))
                 self.waitingForInputFrom += 1
                 self.collectedControllers.append(joyId)
 
