@@ -4,7 +4,8 @@ import pygame
 from pygame.surface import Surface
 
 import color
-from controller import Controller
+from controllers.controller import Controller
+from controllers.inputhandler import InputHandler
 from properties import Properties
 from state import State, GameState
 from utils import Utils
@@ -20,13 +21,13 @@ class ControllerSelection:
         self.state = state
         self.properties = properties
         self._scaledImgGuitar = None
-        self._scaledImgGamePad = None
+        self._scaledImgGamepad = None
         self._scaledImgBand = None
-        self._imgGamePad = pygame.image.load(os.path.join('resources', 'gamepadIcon.png'))
+        self._imgGamepad = pygame.image.load(os.path.join('resources', 'gamepadIcon.png'))
         self._imgBand = pygame.image.load(os.path.join('resources', 'bandIcon.png'))
         self._imgGuitar = pygame.image.load(os.path.join('resources', 'guitarIcon.png'))
-        self.images = [self._imgGamePad, self._imgBand, self._imgGuitar]
-        self.scaledImages = [self._scaledImgGamePad, self._scaledImgBand, self._scaledImgGuitar]
+        self.images = [self._imgGamepad, self._imgBand, self._imgGuitar]
+        self.scaledImages = [self._scaledImgGamepad, self._scaledImgBand, self._scaledImgGuitar]
         self.labels = ["Please press button on a Game Pad", "Please hit a Drum", "Please press button on a Guitar"]
         self.controllers = ["GamePad", "Drums", "Guitar"]
         self.blockWidth = 0
@@ -37,12 +38,12 @@ class ControllerSelection:
         self.recalculatePositions()
 
 
-    def update(self, controller: Controller):
+    def update(self, controller: InputHandler):
         # temporary skip for selecting controllers
-        if controller.getKeyboardButtons()[Controller.INP_ACCEPT]:
-            self.state.gameState = GameState.SHELF
-        if any(controller.getActivatedJoysticks()):
-            joyId = next(i for i, v in enumerate(controller.getActivatedJoysticks()) if v)
+        # if controller.getGenericButtons()[Controller.INP_ACCEPT]:
+        #     self.state.gameState = GameState.SHELF
+        if any(controller.getActiveJoysticks()):
+            joyId = next(i for i, v in enumerate(controller.getActiveJoysticks()) if v)
             if joyId not in self.collectedControllers:
                 controller.setController((self.controllers[self.waitingForInputFrom], joyId))
                 self.waitingForInputFrom += 1

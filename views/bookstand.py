@@ -3,9 +3,10 @@ import random
 import os
 
 import color
+from controllers.controller import Controller
 from properties import Properties
 from views.sh_objects.wardrobe import Wardrobe
-from controller import Controller
+from controllers.inputhandler import InputHandler
 from state import State, GameState
 
 OBJECTS = [
@@ -75,18 +76,18 @@ class Bookstand:
         elif self._state.gameState == GameState.PUZZLE:
             self._objects[self._selectedObject].draw(surface)
 
-    def update(self, controller: Controller):
+    def update(self, controller: InputHandler):
         if self._state.gameState == GameState.SHELF:
-            if controller.getKeyboardButtons()[Controller.INP_RIGHT]:
+            if controller.getGenericButtons()[Controller.INP_RIGHT]:
                 self._selectedObject += 1
-            if controller.getKeyboardButtons()[Controller.INP_LEFT]:
+            if controller.getGenericButtons()[Controller.INP_LEFT]:
                 self._selectedObject -= 1
-            if controller.getKeyboardButtons()[Controller.INP_DOWN]:
+            if controller.getGenericButtons()[Controller.INP_DOWN]:
                 self._selectedObject += self.OBJECTS_ON_SHELF
-            if controller.getKeyboardButtons()[Controller.INP_UP]:
+            if controller.getGenericButtons()[Controller.INP_UP]:
                 self._selectedObject -= self.OBJECTS_ON_SHELF
             self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
-            if controller.getKeyboardButtons()[Controller.INP_ACCEPT]:
+            if controller.getGenericButtons()[Controller.INP_ACCEPT]:
                 self._state.gameState = GameState.PUZZLE
         elif self._state.gameState == GameState.PUZZLE:
             self._objects[self._selectedObject].update(controller)

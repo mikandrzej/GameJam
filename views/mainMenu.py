@@ -1,9 +1,8 @@
-import this
-
 import pygame
 
 import color
-from controller import Controller
+from controllers.controller import Controller
+from controllers.inputhandler import InputHandler
 from properties import Properties
 from state import State, GameState, ScreenState
 from utils import Utils
@@ -25,13 +24,13 @@ class MainMenu:
         self.titleY = self.VMARGIN_TITLE * self.properties.HEIGHT
         self.optionsStartY = self.VMARGIN_OPTIONS * self.properties.HEIGHT
 
-    def update(self, controller: Controller):
-        if controller.getKeyboardButtons()[Controller.INP_UP]:
+    def update(self, controller: InputHandler):
+        if controller.getGenericButtons()[Controller.INP_UP]:
             self.activeOption -= 1
-        if controller.getKeyboardButtons()[Controller.INP_DOWN]:
+        if controller.getGenericButtons()[Controller.INP_DOWN]:
             self.activeOption += 1
         self.activeOption %= len(self.options)
-        if controller.getKeyboardButtons()[Controller.INP_ACCEPT]:
+        if controller.getGenericButtons()[Controller.INP_ACCEPT]:
             self.options[self.activeOption][1]()
 
     def draw(self, surface: pygame.Surface):

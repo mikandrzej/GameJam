@@ -1,9 +1,9 @@
 import pygame
 import color
-from controller import Controller
+from controllers.inputhandler import InputHandler
 import os
 
-from state import State, GameState
+from state import State
 from properties import Properties
 
 
@@ -32,7 +32,7 @@ class Wardrobe:
                                                       (int(self.WARDROBE_WIDTH * self._properties.WIDTH),
                                                         int(self.WARDROBE_HEIGHT * self._properties.HEIGHT)))
 
-    def update(self, controller: Controller):
+    def update(self, controller: InputHandler):
         pass
 
     def recalculatePositions(self):

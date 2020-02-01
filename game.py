@@ -1,8 +1,8 @@
 import pygame
-import random
 
 import color
-from controller import Controller
+from controllers.controller import Controller
+from controllers.inputhandler import InputHandler
 from properties import Properties
 from state import State, ScreenState, GameState
 from views.bookstand import Bookstand
@@ -25,7 +25,7 @@ class Game:
         self.clock = pygame.time.Clock()  ## For syncing the FPS
         self.mainMenu = MainMenu(self.properties, self.state)
         self.bookstand = Bookstand(self.properties, self.state)
-        self.controller = Controller()
+        self.controller = InputHandler()
         self.controllerSelection = ControllerSelection(self.properties, self.state)
 
     def handleEvents(self):
@@ -48,7 +48,7 @@ class Game:
                 self.controllerSelection.recalculatePositions()
 
     def update(self):
-        if self.controller.getKeyboardButtons()[Controller.INP_PAUSE]:
+        if self.controller.getGenericButtons()[Controller.INP_PAUSE]:
             self.state.handleScreenState()
         if self.state.screenState == ScreenState.MAIN_MENU:
             self.mainMenu.update(self.controller)
