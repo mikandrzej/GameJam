@@ -7,14 +7,15 @@ class Controller:
     INP_RIGHT = 2
     INP_DOWN = 4
     INP_LEFT = 8
-
+    INP_ACCEPT = 16
     def __init__(self):
         self.emptyButtons = {
             self.INP_PAUSE: False,
             self.INP_UP: False,
             self.INP_RIGHT: False,
             self.INP_DOWN: False,
-            self.INP_LEFT: False
+            self.INP_LEFT: False,
+            self.INP_ACCEPT: False
         }
         self.buttons = self.emptyButtons.copy()
 
@@ -32,6 +33,8 @@ class Controller:
                     self.buttons[self.INP_DOWN] = True
                 elif event.key == pygame.K_LEFT:
                     self.buttons[self.INP_LEFT] = True
+                elif event.key == pygame.K_RETURN:
+                    self.buttons[self.INP_ACCEPT] = True
 
     def getButtons(self):
         return self.buttons

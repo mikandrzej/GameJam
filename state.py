@@ -7,6 +7,7 @@ class ScreenState(Enum):
 
 
 class GameState(Enum):
+    NONE = 0
     SHELF = 1
     PUZZLE = 2
 
@@ -15,7 +16,7 @@ class State:
     def __init__(self):
         self.mainLoopRunning = True
         self.screenState = ScreenState.MAIN_MENU
-        self.gameState = GameState.SHELF
+        self.gameState = GameState.NONE
 
     def handleScreenState(self):
         if self.screenState == ScreenState.MAIN_MENU:
