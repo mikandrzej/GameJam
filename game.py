@@ -41,6 +41,7 @@ class Game:
                 self.screen = pygame.display.set_mode((self.properties.WIDTH,
                                                        self.properties.HEIGHT),
                                                        pygame.RESIZABLE)
+                self.bookstand.recalculatePositions()
 
     def update(self):
         if self.controller.getButtons()[Controller.INP_PAUSE]:

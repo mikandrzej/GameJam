@@ -1,27 +1,29 @@
 import pygame
 import random
+import os
 
 import color
 from properties import Properties
 from views.sh_objects.objectA import ObjectA
+from views.sh_objects.objectB import ObjectB
 
 OBJECTS = [
     ObjectA,
-    ObjectA,
-    ObjectA,
-    ObjectA
+    ObjectB
 ]
 
 
 class Bookstand:
-    POS_X = 0.2
-    POS_Y = 0.2
-    WIDTH = 0.6
-    HEIGHT = 0.6
+    POS_X = 0.1
+    POS_Y = 0.1
+    WIDTH = 0.8
+    HEIGHT = 0.8
     BOARD_THICKNESS = 0.01
+    OFFSET_UP = 0.05
+    OFFSET_DOWN = 0.17
     OBJECT_OFFSET = 0.03
-    SHELFS = 3
-    OBJECTS_ON_SHELF = 5
+    SHELFS = 5
+    OBJECTS_ON_SHELF = 7
 
     def __init__(self, properties: Properties):
         self.properties = properties
@@ -35,13 +37,15 @@ class Bookstand:
             objects.append(object)
         self._objects = objects
 
+        self._imgBookstand = pygame.image.load(os.path.join('resources', 'regal.bmp'))
+
         self._calculateCoordinates()
 
     def _calculateCoordinates(self):
         self._shelfPositionX = self.POS_X + self.BOARD_THICKNESS
         self._shelfPositionsY = []
         for x in range(self.SHELFS):
-            self._shelfPositionsY.append(self.POS_Y + self.BOARD_THICKNESS + (x / self.SHELFS) * (self.HEIGHT - self.BOARD_THICKNESS))
+            self._shelfPositionsY.append(self.POS_Y + self.OFFSET_UP + (x / self.SHELFS) * (self.HEIGHT - self.OFFSET_DOWN - self.OFFSET_UP))
         self._shelfWidth = self.WIDTH - 2 * self.BOARD_THICKNESS
         self._shelfHeight = (self.HEIGHT - self.BOARD_THICKNESS) / self.SHELFS - self.BOARD_THICKNESS
 
@@ -55,29 +59,36 @@ class Bookstand:
         for y in range(self.OBJECTS_ON_SHELF * self.SHELFS):
             self._objPositionsY.append(self._shelfPositionsY[y // self.OBJECTS_ON_SHELF] + self.OBJECT_OFFSET)
 
+        self._scaledImgBookstand = pygame.transform.scale(self._imgBookstand, (int(self.WIDTH * self.properties.WIDTH),
+                                                                               int(self.HEIGHT * self.properties.HEIGHT)))
     def draw(self, surface: pygame.Surface):
         self._drawShelf(surface)
         self._drawObjects(surface)
 
     def _drawShelf(self, surface: pygame.Surface):
-        bookstand = pygame.Rect(self.POS_X * self.properties.WIDTH,
-                                self.POS_Y * self.properties.HEIGHT,
-                                self.WIDTH * self.properties.WIDTH,
-                                self.HEIGHT * self.properties.HEIGHT
-                                )
-
-        shelfs = []
-        for y in range(self.SHELFS):
-            shelf = pygame.Rect(self._shelfPositionX * self.properties.WIDTH,
-                                self._shelfPositionsY[y] * self.properties.HEIGHT,
-                                self._shelfWidth * self.properties.WIDTH,
-                                self._shelfHeight * self.properties.HEIGHT
-                                )
-            shelfs.append(shelf)
-
-        pygame.draw.rect(surface, color.COL_BOOKSTAND, bookstand)
-        for shelf in shelfs:
-            pygame.draw.rect(surface, color.COL_SHELF, shelf)
+        # bookstand = pygame.Rect(self.POS_X * self.properties.WIDTH,
+        #                         self.POS_Y * self.properties.HEIGHT,
+        #                         self.WIDTH * self.properties.WIDTH,
+        #                         self.HEIGHT * self.properties.HEIGHT
+        #                         )
+        #
+        # shelfs = []
+        # for y in range(self.SHELFS):
+        #     shelf = pygame.Rect(self._shelfPositionX * self.properties.WIDTH,
+        #                         self._shelfPositionsY[y] * self.properties.HEIGHT,
+        #                         self._shelfWidth * self.properties.WIDTH,
+        #                         self._shelfHeight * self.properties.HEIGHT
+        #                         )
+        #     shelfs.append(shelf)
+        #
+        # pygame.draw.rect(surface, color.COL_BOOKSTAND, bookstand)
+        # for shelf in shelfs:
+        #     pygame.draw.rect(surface, color.COL_SHELF, shelf)
+        area = pygame.Rect(self.POS_X * self.properties.WIDTH,
+                           self.POS_Y * self.properties.HEIGHT,
+                           self.WIDTH * self.properties.WIDTH,
+                           self.HEIGHT * self.properties.HEIGHT)
+        surface.blit(self._scaledImgBookstand, area)
 
     def _drawObjects(self, surface: pygame.Surface):
         for ind, obj in enumerate(self._objects):
