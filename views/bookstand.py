@@ -4,13 +4,16 @@ import os
 
 import color
 from controllers.controller import Controller
+from controllers.inputhandler import InputHandler
 from properties import Properties
 from views.sh_objects.wardrobe import Wardrobe
-from controllers.inputhandler import InputHandler
+from views.sh_objects.car import Car
 from state import State, GameState
 
 OBJECTS = [
+    None,
     Wardrobe,
+    Car
 ]
 
 class Bookstand:
@@ -18,17 +21,17 @@ class Bookstand:
     POS_Y = 0.1
     WIDTH = 0.8
     HEIGHT = 0.8
-    BOARD_THICKNESS = 0.01
-    OFFSET_UP = 0.05
-    OFFSET_DOWN = 0.17
-    OBJECT_OFFSET = 0.03
-    SHELFS = 5
-    OBJECTS_ON_SHELF = 7
+    BOARD_THICKNESS = 0.1
+    OFFSET_UP = 0.15
+    OFFSET_DOWN = 0.2
+    OBJECT_OFFSET = 0.04
+    SHELFS = 2
+    OBJECTS_ON_SHELF = 4
     SELECTED_RECT_OFFSET = 0.01
     SELECTED_RECT_WIDTH = 0.01
 
     def __init__(self, properties: Properties, state: State):
-        self.properties = properties
+        self._properties = properties
         self._scrWidth = properties.WIDTH
         self._scrHeight = properties.HEIGHT
         self._state = state
@@ -36,8 +39,11 @@ class Bookstand:
         objects = []
         for x in range(self.OBJECTS_ON_SHELF * self.SHELFS):
             rand = random.randrange(len(OBJECTS))
-            object = OBJECTS[rand](self.properties, self._state)
-            objects.append(object)
+            if OBJECTS[rand] != None:
+                object = OBJECTS[rand](self._properties, self._state)
+                objects.append(object)
+            else:
+                objects.append(None)
         self._objects = objects
 
         self._imgBookstand = pygame.image.load(os.path.join('resources', 'regal.bmp'))
@@ -64,28 +70,47 @@ class Bookstand:
         for y in range(self.OBJECTS_ON_SHELF * self.SHELFS):
             self._objPositionsY.append(self._shelfPositionsY[y // self.OBJECTS_ON_SHELF] + self.OBJECT_OFFSET)
 
-        self._scaledImgBookstand = pygame.transform.scale(self._imgBookstand, (int(self.WIDTH * self.properties.WIDTH),
-                                                                               int(self.HEIGHT * self.properties.HEIGHT)))
+        self._scaledImgBookstand = pygame.transform.scale(self._imgBookstand, (int(self.WIDTH * self._properties.WIDTH),
+                                                                               int(self.HEIGHT * self._properties.HEIGHT)))
         for obj in self._objects:
-            obj._scaledIcon = pygame.transform.scale(obj.ICON, (int(self._objectWidth * self.properties.WIDTH),
-                                                                               int(self._objectHeight * self.properties.HEIGHT)))
+            if obj == None:
+                continue
+            obj._scaledIcon = pygame.transform.scale(obj.ICON, (int(self._objectWidth * self._properties.WIDTH),
+                                                                               int(self._objectHeight * self._properties.HEIGHT)))
     def draw(self, surface: pygame.Surface):
         if self._state.gameState == GameState.SHELF:
             self._drawShelf(surface)
             self._drawObjects(surface)
         elif self._state.gameState == GameState.PUZZLE:
-            self._objects[self._selectedObject].draw(surface)
+            if self._objects[self._selectedObject] != None:
+                self._objects[self._selectedObject].draw(surface)
 
     def update(self, controller: InputHandler):
         if self._state.gameState == GameState.SHELF:
             if controller.getGenericButtons()[Controller.INP_RIGHT]:
                 self._selectedObject += 1
+                self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
+                while(self._objects[self._selectedObject] == None):
+                    self._selectedObject += 1
+                    self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
             if controller.getGenericButtons()[Controller.INP_LEFT]:
                 self._selectedObject -= 1
+                self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
+                while(self._objects[self._selectedObject] == None):
+                    self._selectedObject -= 1
+                    self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
             if controller.getGenericButtons()[Controller.INP_DOWN]:
                 self._selectedObject += self.OBJECTS_ON_SHELF
+                self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
+                while(self._objects[self._selectedObject] == None):
+                    self._selectedObject += 1
+                    self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
             if controller.getGenericButtons()[Controller.INP_UP]:
                 self._selectedObject -= self.OBJECTS_ON_SHELF
+                self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
+                while(self._objects[self._selectedObject] == None):
+                    self._selectedObject -= 1
+                    self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
             self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
             if controller.getGenericButtons()[Controller.INP_ACCEPT]:
                 self._state.gameState = GameState.PUZZLE
@@ -94,30 +119,32 @@ class Bookstand:
 
 
     def _drawShelf(self, surface: pygame.Surface):
-        area = pygame.Rect(self.POS_X * self.properties.WIDTH,
-                           self.POS_Y * self.properties.HEIGHT,
-                           self.WIDTH * self.properties.WIDTH,
-                           self.HEIGHT * self.properties.HEIGHT)
+        area = pygame.Rect(self.POS_X * self._properties.WIDTH,
+                           self.POS_Y * self._properties.HEIGHT,
+                           self.WIDTH * self._properties.WIDTH,
+                           self.HEIGHT * self._properties.HEIGHT)
         surface.blit(self._scaledImgBookstand, area)
 
 
     def _drawObjects(self, surface: pygame.Surface):
         for ind, obj in enumerate(self._objects):
-            area = pygame.Rect(self._objPositionsX[ind] * self.properties.WIDTH,
-                               self._objPositionsY[ind] * self.properties.HEIGHT,
-                               self._objectWidth * self.properties.WIDTH,
-                               self._objectHeight * self.properties.HEIGHT)
+            if obj == None:
+                continue
+            area = pygame.Rect(self._objPositionsX[ind] * self._properties.WIDTH,
+                               self._objPositionsY[ind] * self._properties.HEIGHT,
+                               self._objectWidth * self._properties.WIDTH,
+                               self._objectHeight * self._properties.HEIGHT)
             # objSurface = pygame.Surface((area.width, area.height))
             # obj.draw(objSurface)
             surface.blit(obj._scaledIcon, area)
             if self._selectedObject == ind:
-                rect = pygame.Rect((self._objPositionsX[ind] - self.SELECTED_RECT_OFFSET) * self.properties.WIDTH,
-                                    (self._objPositionsY[ind] - self.SELECTED_RECT_OFFSET) * self.properties.HEIGHT,
-                                    (self._objectWidth + self.SELECTED_RECT_OFFSET * 2) * self.properties.WIDTH,
-                                    (self._objectHeight + self.SELECTED_RECT_OFFSET * 2) * self.properties.HEIGHT
-                                    )
+                rect = pygame.Rect((self._objPositionsX[ind] - self.SELECTED_RECT_OFFSET) * self._properties.WIDTH,
+                                   (self._objPositionsY[ind] - self.SELECTED_RECT_OFFSET) * self._properties.HEIGHT,
+                                   (self._objectWidth + self.SELECTED_RECT_OFFSET * 2) * self._properties.WIDTH,
+                                   (self._objectHeight + self.SELECTED_RECT_OFFSET * 2) * self._properties.HEIGHT
+                                   )
                 pygame.draw.rect(surface, color.COL_SELECTED, rect, 5)
 
     def recalculatePositions(self):
-        if self._scrWidth != self.properties.WIDTH or self._scrHeight != self.properties.HEIGHT:
+        if self._scrWidth != self._properties.WIDTH or self._scrHeight != self._properties.HEIGHT:
             self._calculateCoordinates()

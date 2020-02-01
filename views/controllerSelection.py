@@ -39,8 +39,8 @@ class ControllerSelection:
 
     def update(self, controller: InputHandler):
         # temporary skip for selecting controllers
-        # if controller.getGenericButtons()[Controller.INP_ACCEPT]:
-        #     self.state.gameState = GameState.SHELF
+        if controller.getGenericButtons()[Controller.INP_ACCEPT]:
+            self.state.gameState = GameState.SHELF
         if any(controller.getActiveJoysticks()):
             joyId = next(i for i, v in enumerate(controller.getActiveJoysticks()) if v)
             if joyId not in self.collectedControllers:
