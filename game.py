@@ -24,7 +24,7 @@ class Game:
         pygame.display.set_caption(properties.GAME_TITLE)
         self.clock = pygame.time.Clock()  ## For syncing the FPS
         self.mainMenu = MainMenu(self.properties, self.state)
-        self.bookstand = Bookstand(self.properties)
+        self.bookstand = Bookstand(self.properties, self.state)
         self.controller = Controller()
         self.controllerSelection = ControllerSelection(self.properties, self.state)
 
@@ -64,10 +64,8 @@ class Game:
         if self.state.screenState == ScreenState.RUNNING:
             if self.state.gameState == GameState.CONTROLLER_SELECTION:
                 self.controllerSelection.draw(self.screen)
-            elif self.state.gameState == GameState.SHELF:
+            elif self.state.gameState in [GameState.SHELF, GameState.PUZZLE]:
                 self.bookstand.draw(self.screen)
-            elif self.state.gameState == GameState.PUZZLE:
-                self.screen.fill(color.BLUE)
         else:
             self.mainMenu.draw(self.screen)
 

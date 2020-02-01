@@ -4,17 +4,13 @@ import os
 
 import color
 from properties import Properties
-from views.sh_objects.objectA import ObjectA
-from views.sh_objects.objectB import ObjectB
-from views.sh_objects.objectC import ObjectC
+from views.sh_objects.wardrobe import Wardrobe
 from controller import Controller
+from state import State, GameState
 
 OBJECTS = [
-    ObjectA,
-    ObjectB,
-    ObjectC
+    Wardrobe,
 ]
-
 
 class Bookstand:
     POS_X = 0.1
@@ -30,15 +26,16 @@ class Bookstand:
     SELECTED_RECT_OFFSET = 0.01
     SELECTED_RECT_WIDTH = 0.01
 
-    def __init__(self, properties: Properties):
+    def __init__(self, properties: Properties, state: State):
         self.properties = properties
         self._scrWidth = properties.WIDTH
         self._scrHeight = properties.HEIGHT
+        self._state = state
 
         objects = []
         for x in range(self.OBJECTS_ON_SHELF * self.SHELFS):
             rand = random.randrange(len(OBJECTS))
-            object = OBJECTS[rand]()
+            object = OBJECTS[rand](self.properties, self._state)
             objects.append(object)
         self._objects = objects
 
@@ -68,20 +65,32 @@ class Bookstand:
 
         self._scaledImgBookstand = pygame.transform.scale(self._imgBookstand, (int(self.WIDTH * self.properties.WIDTH),
                                                                                int(self.HEIGHT * self.properties.HEIGHT)))
+        for obj in self._objects:
+            obj._scaledIcon = pygame.transform.scale(obj.ICON, (int(self._objectWidth * self.properties.WIDTH),
+                                                                               int(self._objectHeight * self.properties.HEIGHT)))
     def draw(self, surface: pygame.Surface):
-        self._drawShelf(surface)
-        self._drawObjects(surface)
+        if self._state.gameState == GameState.SHELF:
+            self._drawShelf(surface)
+            self._drawObjects(surface)
+        elif self._state.gameState == GameState.PUZZLE:
+            self._objects[self._selectedObject].draw(surface)
 
     def update(self, controller: Controller):
-        if controller.getKeyboardButtons()[Controller.INP_RIGHT]:
-            self._selectedObject += 1
-        if controller.getKeyboardButtons()[Controller.INP_LEFT]:
-            self._selectedObject -= 1
-        if controller.getKeyboardButtons()[Controller.INP_DOWN]:
-            self._selectedObject += self.OBJECTS_ON_SHELF
-        if controller.getKeyboardButtons()[Controller.INP_UP]:
-            self._selectedObject -= self.OBJECTS_ON_SHELF
-        self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
+        if self._state.gameState == GameState.SHELF:
+            if controller.getKeyboardButtons()[Controller.INP_RIGHT]:
+                self._selectedObject += 1
+            if controller.getKeyboardButtons()[Controller.INP_LEFT]:
+                self._selectedObject -= 1
+            if controller.getKeyboardButtons()[Controller.INP_DOWN]:
+                self._selectedObject += self.OBJECTS_ON_SHELF
+            if controller.getKeyboardButtons()[Controller.INP_UP]:
+                self._selectedObject -= self.OBJECTS_ON_SHELF
+            self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
+            if controller.getKeyboardButtons()[Controller.INP_ACCEPT]:
+                self._state.gameState = GameState.PUZZLE
+        elif self._state.gameState == GameState.PUZZLE:
+            self._objects[self._selectedObject].update(controller)
+
 
     def _drawShelf(self, surface: pygame.Surface):
         area = pygame.Rect(self.POS_X * self.properties.WIDTH,
@@ -97,9 +106,9 @@ class Bookstand:
                                self._objPositionsY[ind] * self.properties.HEIGHT,
                                self._objectWidth * self.properties.WIDTH,
                                self._objectHeight * self.properties.HEIGHT)
-            objSurface = pygame.Surface((area.width, area.height))
-            obj.draw(objSurface)
-            surface.blit(objSurface, area)
+            # objSurface = pygame.Surface((area.width, area.height))
+            # obj.draw(objSurface)
+            surface.blit(obj._scaledIcon, area)
             if self._selectedObject == ind:
                 rect = pygame.Rect((self._objPositionsX[ind] - self.SELECTED_RECT_OFFSET) * self.properties.WIDTH,
                                     (self._objPositionsY[ind] - self.SELECTED_RECT_OFFSET) * self.properties.HEIGHT,
