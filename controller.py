@@ -1,3 +1,6 @@
+import math
+from math import cos, sin, atan2
+
 import pygame
 
 
@@ -62,14 +65,12 @@ class Controller:
                 self._handleJoystickButton(event)
             if event.type == pygame.JOYHATMOTION:
                 self._handleJoystickHat(event)
+            if event.type == pygame.JOYAXISMOTION:
+                self._handleJoystickAxis(event)
 
     def _handleJoystickHat(self, event):
-        joy = pygame.joystick.Joystick(event.joy)
-        hats = joy.get_numhats()
-        for i in range(hats):
-            hat = joy.get_hat(i)
-            if hat in self.GAMEPAD_HAT_MAP.keys():
-                self.buttons[self.GAMEPAD_HAT_MAP[hat]] = True
+        if event.value in self.GAMEPAD_HAT_MAP.keys():
+            self.buttons[self.GAMEPAD_HAT_MAP[event.value]] = True
 
     def _handleJoystickButton(self, event):
         self.activeJoysticks[event.joy] = True
@@ -93,3 +94,8 @@ class Controller:
             self.DRUMS = whichController
         elif whichController[0] == "Guitar":
             self.GUITAR = whichController
+
+    def _handleJoystickAxis(self, event):
+        pass
+
+

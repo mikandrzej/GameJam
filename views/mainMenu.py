@@ -30,8 +30,6 @@ class MainMenu:
             self.activeOption -= 1
         if controller.getKeyboardButtons()[Controller.INP_DOWN]:
             self.activeOption += 1
-        if controller.getKeyboardButtons()[Controller.INP_PAUSE]:
-            self.state.mainLoopRunning = False
         self.activeOption %= len(self.options)
         if controller.getKeyboardButtons()[Controller.INP_ACCEPT]:
             self.options[self.activeOption][1]()
