@@ -26,12 +26,14 @@ class MainMenu:
         self.optionsStartY = self.VMARGIN_OPTIONS * self.properties.HEIGHT
 
     def update(self, controller: Controller):
-        if controller.getButtons()[Controller.INP_UP]:
+        if controller.getKeyboardButtons()[Controller.INP_UP]:
             self.activeOption -= 1
-        if controller.getButtons()[Controller.INP_DOWN]:
+        if controller.getKeyboardButtons()[Controller.INP_DOWN]:
             self.activeOption += 1
+        if controller.getKeyboardButtons()[Controller.INP_PAUSE]:
+            self.state.mainLoopRunning = False
         self.activeOption %= len(self.options)
-        if controller.getButtons()[Controller.INP_ACCEPT]:
+        if controller.getKeyboardButtons()[Controller.INP_ACCEPT]:
             self.options[self.activeOption][1]()
 
     def draw(self, surface: pygame.Surface):
@@ -43,7 +45,9 @@ class MainMenu:
         y = self.optionsStartY
         i = 0
         for optionTitle, method in self.options:
-            TextSurf, TextRect = Utils.textGenerator(optionTitle, self.menuFont, color.BLUE if i == self.activeOption else color.BLACK)
+            TextSurf, TextRect = Utils.textGenerator(optionTitle,
+                                                     self.menuFont,
+                                                     color.SELECTED_MENU_TEXT if i == self.activeOption else color.MENU_TEXT)
             TextRect.midtop = ((self.properties.WIDTH / 2), y)
             surface.blit(TextSurf, TextRect)
             i += 1
@@ -53,7 +57,7 @@ class MainMenu:
         # if self.state.gameState != GameState.NONE:
         self.options = self.pauseOptions
         self.state.screenState = ScreenState.RUNNING
-        self.state.gameState = GameState.SHELF
+        self.state.gameState = GameState.CONTROLLER_SELECTION
 
     def resumeGame(self):
         self.state.screenState = ScreenState.RUNNING

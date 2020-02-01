@@ -8,8 +8,9 @@ class ScreenState(Enum):
 
 class GameState(Enum):
     NONE = 0
-    SHELF = 1
-    PUZZLE = 2
+    CONTROLLER_SELECTION = 1
+    SHELF = 2
+    PUZZLE = 3
 
 
 class State:

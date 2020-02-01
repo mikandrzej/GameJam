@@ -73,13 +73,13 @@ class Bookstand:
         self._drawObjects(surface)
 
     def update(self, controller: Controller):
-        if controller.getButtons()[Controller.INP_RIGHT]:
+        if controller.getKeyboardButtons()[Controller.INP_RIGHT]:
             self._selectedObject += 1
-        if controller.getButtons()[Controller.INP_LEFT]:
+        if controller.getKeyboardButtons()[Controller.INP_LEFT]:
             self._selectedObject -= 1
-        if controller.getButtons()[Controller.INP_DOWN]:
+        if controller.getKeyboardButtons()[Controller.INP_DOWN]:
             self._selectedObject += self.OBJECTS_ON_SHELF
-        if controller.getButtons()[Controller.INP_UP]:
+        if controller.getKeyboardButtons()[Controller.INP_UP]:
             self._selectedObject -= self.OBJECTS_ON_SHELF
         self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
 
