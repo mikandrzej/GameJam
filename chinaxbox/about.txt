@@ -1,0 +1,24 @@
+This file was downloaded from
+ 
+https://www.s-config.com
+
+This is the same Microsoft .exe files except re-packed for the 7z format.
+
+Folders are as follows:
+ 
+Xbox360_32EnG - This is the 32 bit version of the Xbox Driver for those working with Windows 7 32-bit, Windows 8 32-bit, and finally windows 10 32-bit.
+Xbox360_64End - This is the 64 bit version of the Xbox Driver for those working with Windows 7 64-bit, Windows 8 64-bit, and finally windows 10 64-bit.
+Xbox360_Mod_XP - This version is made specifically for windows XP 32/64 bit and Windows 7 32/64. The xusb21.inf contains the following line: 
+ 
+%XUSB21.DeviceName%=CC_Install, USB\Vid_045E&Pid_0291
+
+
+For windows XP, follow the instructions on the following blog: https://www.s-config.com/china-xbox-wireless-receiver-windows-xp/
+
+For windows 7, follow the instructions on the following blog: https://www.s-config.com/archived-xbox-360-receiver-install-for-win-xp-and-win-7/
+
+For windows 10, follow the instructions on the following blog: https://www.s-config.com/chinese-xbox-360-wireless-receiver-driver-setup/
+
+We thank for for checking out our blog. Peace.
+ 
+- S
