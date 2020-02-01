@@ -9,7 +9,12 @@ from utils import Utils
 
 class Car:
     ICON = pygame.image.load(os.path.join('resources', 'car_icon.png'))
-    # IMG_CAR = pygame.image.load(os.path.join('resources', 'car.png'))
+    IMG_CAR = pygame.image.load(os.path.join('resources', 'car2.png'))
+
+    CAR_X = 0.1
+    CAR_Y = 0.1
+    CAR_WIDTH = 0.8
+    CAR_HEIGHT = 0.8
     #
     # PROGRESS_X = 0.8
     # PROGRESS_Y = 0.1
@@ -23,16 +28,22 @@ class Car:
 
     def __init__(self, properties: Properties, state: State):
         pass
-        # self._properties = properties
-        # self._state = state
-        # self._scrWidth = properties.WIDTH
-        # self._scrHeight = properties.HEIGHT
+        self._properties = properties
+        self._state = state
+        self._scrWidth = properties.WIDTH
+        self._scrHeight = properties.HEIGHT
         #
         # self._scaleImages()
-        # self._calculateCoordinates()
+        self._scaleImages()
+        self._calculateCoordinates()
 
     def draw(self, surface: pygame.Surface):
-        pass
+        self._recalculatePositions()
+        surface.blit(self._scaledCar,
+                     pygame.Rect(self.CAR_X * self._properties.WIDTH,
+                                 self.CAR_Y * self._properties.HEIGHT,
+                                 self.CAR_WIDTH * self._properties.WIDTH,
+                                 self.CAR_HEIGHT * self._properties.HEIGHT))
         # self._drawProgress(surface)
         # self._drawFonts(surface)
 
@@ -58,22 +69,25 @@ class Car:
         surface.blit(textSurf, textRect)
 
     def _calculateCoordinates(self):
-        self._progressX = self.PROGRESS_X
-        self._progressInnerX = self.PROGRESS_X + self.PROGRESS_BOUND_WIDTH
-        self._progressYs = []
-        self._progressInnerYs = []
-        for x in range(5):
-            self._progressYs.append(
-                self.PROGRESS_Y + (self.PROGRESS_OFFSET * x)
-            )
-            self._progressInnerYs.append(
-                self.PROGRESS_Y + self.PROGRESS_BOUND_WIDTH + (self.PROGRESS_OFFSET * x)
-            )
-        self._progressInnerWidth = self.PROGRESS_WIDTH - 2 * self.PROGRESS_BOUND_WIDTH
-        self._progressInnerHeight = self.PROGRESS_HEIGHT - 2 * self.PROGRESS_BOUND_WIDTH
+        pass
+        # self._progressX = self.PROGRESS_X
+        # self._progressInnerX = self.PROGRESS_X + self.PROGRESS_BOUND_WIDTH
+        # self._progressYs = []
+        # self._progressInnerYs = []
+        # for x in range(5):
+        #     self._progressYs.append(
+        #         self.PROGRESS_Y + (self.PROGRESS_OFFSET * x)
+        #     )
+        #     self._progressInnerYs.append(
+        #         self.PROGRESS_Y + self.PROGRESS_BOUND_WIDTH + (self.PROGRESS_OFFSET * x)
+        #     )
+        # self._progressInnerWidth = self.PROGRESS_WIDTH - 2 * self.PROGRESS_BOUND_WIDTH
+        # self._progressInnerHeight = self.PROGRESS_HEIGHT - 2 * self.PROGRESS_BOUND_WIDTH
 
     def _scaleImages(self):
-        pass
+        self._scaledCar = pygame.transform.scale(self.IMG_CAR,
+                                                 (int(self.CAR_WIDTH * self._properties.WIDTH),
+                                                int(self.CAR_HEIGHT * self._properties.HEIGHT)))
 
     def _drawProgress(self, surface: pygame.Surface):
         pass
@@ -138,7 +152,6 @@ class Car:
         #     self._nailTimer = 0
 
     def _recalculatePositions(self):
-        pass
-        # if self._scrWidth != self._properties.WIDTH or self._scrHeight != self._properties.HEIGHT:
-        #     self._scaleImages()
-        #     self._calculateCoordinates()
+        if self._scrWidth != self._properties.WIDTH or self._scrHeight != self._properties.HEIGHT:
+            self._scaleImages()
+            self._calculateCoordinates()
