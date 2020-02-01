@@ -2,6 +2,7 @@ import pygame
 import random
 
 import color
+from controller import Controller
 from properties import Properties
 from state import State, ScreenState, GameState
 from views.bookstand import Bookstand
@@ -20,27 +21,32 @@ class Game:
                                               pygame.RESIZABLE)
         pygame.display.set_caption(properties.GAME_TITLE)
         self.clock = pygame.time.Clock()  ## For syncing the FPS
-        self.mainMenu = MainMenu()
+        self.mainMenu = MainMenu(self.properties)
         self.bookstand = Bookstand(self.properties)
+        self.controller = Controller()
 
     def handleEvents(self):
         # 1 Process input/events
-        for event in pygame.event.get():  # gets all the events which have occured till now and keeps tab of them.
-            ## listening for the the X button at the top
+        events = pygame.event.get()
+        self.controller.handleEvents(events)
+        for event in events:  # gets all the events which have occured till now and keeps tab of them.
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.state.handleScreenState()
                 self.state.handleGameState(event)
             if event.type == pygame.QUIT:
                 self.state.mainLoopRunning = False
             if event.type == pygame.VIDEORESIZE:
                 # There's some code to add back window content here.
-                self.screen = pygame.display.set_mode((event.w, event.h),
-                                                      pygame.RESIZABLE)
+                self.properties.HEIGHT = event.h
+                self.properties.WIDTH = event.w
+                self.screen = pygame.display.set_mode((self.properties.WIDTH,
+                                                       self.properties.HEIGHT),
+                                                       pygame.RESIZABLE)
 
     def update(self):
-        print(self.state.gameState)
-        print(self.state.screenState)
+        if self.controller.getButtons()[Controller.INP_PAUSE]:
+            self.state.handleScreenState()
+        if self.state.screenState == ScreenState.MAIN_MENU:
+            self.mainMenu.update(self.controller)
 
     def draw(self):
         # 3 Draw/render
@@ -52,12 +58,8 @@ class Game:
                 self.screen.fill(color.BLUE)
         else:
             self.mainMenu.draw(self.screen)
-        # all_sprites.draw(screen)
-        ########################
 
     def run(self):
-        ## Game loop
-        self.state.mainLoopRunning = True
         while self.state.mainLoopRunning:
             self.properties.delta = self.clock.tick(self.properties.FPS)  ## will make the loop run at the same speed all the time
             self.handleEvents()
