@@ -23,14 +23,8 @@ class Gamepad(Controller):
             Controller.INP_LEFT: False,
             Controller.INP_STICK_STILL: False
         }
-        self.axises = ((self.leftStickDirections, 0, 1, -1), (self.rightStickDirections, 4, 3, -1))
-        self.emptyStickDirections = {
-            Controller.INP_UP: False,
-            Controller.INP_RIGHT: False,
-            Controller.INP_DOWN: False,
-            Controller.INP_LEFT: False,
-            Controller.INP_STICK_STILL: False
-        }
+        self.sticks = ((self.leftStickDirections, 0, 1, -1), (self.rightStickDirections, 4, 3, -1))
+
     GAMEPAD_MAP = {
         0: Controller.INP_ACCEPT,
         6: Controller.INP_PAUSE,
@@ -60,9 +54,9 @@ class Gamepad(Controller):
         # print(self.leftStickDirections)
 
     def handleAxises(self):
-        for axises in self.axises:
-            axisXVal = self.joystick.get_axis(axises[1])
-            axisYVal = self.joystick.get_axis(axises[2]) * axises[3]
+        for stick in self.sticks:
+            axisXVal = self.joystick.get_axis(stick[1])
+            axisYVal = self.joystick.get_axis(stick[2]) * stick[3]
             if sqrt(pow(axisXVal, 2) + pow(axisYVal, 2)) < self.DEAD_ZONE:
                 direction = Controller.INP_STICK_STILL
             elif axisXVal > axisYVal > -1 * axisXVal:
@@ -74,8 +68,8 @@ class Gamepad(Controller):
             else:
                 direction = Controller.INP_UP
 
-            for key in axises[0].keys():
+            for key in stick[0].keys():
                 if direction == key:
-                    axises[0][key] = True
+                    stick[0][key] = True
                 else:
-                    axises[0][key] = False
+                    stick[0][key] = False
