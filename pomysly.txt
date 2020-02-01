@@ -1,0 +1,33 @@
+- prosta gra, ekran na którym dostajemy element do naprawy i wybieramy narzędzia
+- pijany mechanik naprawiający komputer
+- milionerzy - naprawa komputera (hw i sw)
+- naprawa zębów
+- gra coś a'la PACMAN - naprawianie drogi. Na dwie osoby - jedna jeździ gównem co wylewa asfalt, a druga walcem
+- TOWER DEFFENCE - ciężarówki i osobówki jeżdżą po drogach, im więcej w ciągu sekundy ich przejeżdża tym bardziej uszkodzi się droga. Ustawiamy inspekcję transportu drogowego i tym samym eliminujemy ciężarówki
++ jako rozwinięcie dodanie semi-levelu, w którym trzeba jak najszybciej naprawić drogę
+- użycie gitary i perkusji do symulacji młotka i przykręcania śrubek
+- tower-deffence - nadajniki, hakrer chodzący z zakłócaczem WiFi itp. Trzba pilnować żeby łącze działało
+
+
+DIVERSIFIERS:
+- pogoda wpływa na grę
+- imię jako seed do randoma
+- pluginy do modowania gry
+- zmęczenie fizyczne gracza
+- dokładnie 20 sekund na gre
+
+
+DODATKI:
+- gra imprezowoa - co-op
+
+
+gitara jako papier ścierny, kolory jako granulacja
+śruby oznaczane typem wkrętaka
+młotek - gwoździe różnego koloru
+
+wymiana koła w samochodzie:
+gitara - szarpanie koła
+pad - śruby
+perkusja zdjęcie koła
+stopa - lewarek??
+

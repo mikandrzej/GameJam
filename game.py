@@ -48,6 +48,8 @@ class Game:
             self.state.handleScreenState()
         if self.state.screenState == ScreenState.MAIN_MENU:
             self.mainMenu.update(self.controller)
+        else:
+            self.bookstand.update(self.controller)
 
     def draw(self):
         # 3 Draw/render
