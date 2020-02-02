@@ -81,7 +81,7 @@ class Wardrobe:
                                 self.NAIL_Y * self._properties.HEIGHT,
                                 self.NAIL_WIDTH * self._properties.WIDTH,
                                 self.NAIL_HEIGHT * self._properties.HEIGHT))
-        surface.blit(self._scaledScrews[self._nailType],
+        surface.blit(self._scaledScrews[self._screwType],
                      pygame.Rect(self.SCREW_X * self._properties.WIDTH,
                                 self.SCREW_Y * self._properties.HEIGHT,
                                 self.SCREW_WIDTH * self._properties.WIDTH,
@@ -95,7 +95,7 @@ class Wardrobe:
                                                   self._properties.labelPuzzleProgressSize)
         textSurf, textRect = Utils.textGenerator(self.PROGRESS_TEXT_NAIL,
                                                  self._progressNailFont,
-                                                 color.COL_PUZZLE_NAIL_PROGRESS_TEXT)
+                                                 color.COL_PUZZLE_PROGRESS_TEXT)
         textRect.midtop = (self.PROGRESS_TEXT_X * self._properties.WIDTH,
                            self._progressYs[0] * self._properties.HEIGHT)
         surface.blit(textSurf, textRect)
@@ -105,7 +105,7 @@ class Wardrobe:
                                                   self._properties.labelPuzzleProgressSize)
         textSurf, textRect = Utils.textGenerator(self.PROGRESS_TEXT_SCREW,
                                                  self._progressNailFont,
-                                                 color.COL_PUZZLE_SCREW_PROGRESS_TEXT)
+                                                 color.COL_PUZZLE_PROGRESS_TEXT)
         textRect.midtop = (self.PROGRESS_TEXT_X * self._properties.WIDTH,
                            self._progressYs[1] * self._properties.HEIGHT)
         surface.blit(textSurf, textRect)

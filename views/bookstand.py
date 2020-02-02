@@ -42,6 +42,7 @@ class Bookstand:
             if OBJECTS[rand] != None:
                 object = OBJECTS[rand](self._properties, self._state)
                 objects.append(object)
+                self._selectedObject = x
             else:
                 objects.append(None)
         self._objects = objects
@@ -49,8 +50,6 @@ class Bookstand:
         self._imgBookstand = pygame.image.load(os.path.join('resources', 'regal.bmp'))
 
         self._calculateCoordinates()
-
-        self._selectedObject = 0
 
     def _calculateCoordinates(self):
         self._shelfPositionX = self.POS_X + self.BOARD_THICKNESS
