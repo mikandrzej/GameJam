@@ -3,7 +3,7 @@ class Properties:
         self.WIDTH = 1366
         self.HEIGHT = 768
         self.FPS = 30
-        self.GAME_TITLE = "<Your game>"
+        self.GAME_TITLE = "Handyman Hero"
         self.WINDOW_TITLE = self.GAME_TITLE
         self.delta = 0.0
         self.menuOptionsFontSize = 50
