@@ -13,7 +13,8 @@ from quests.quest_car import QUESTS_CAR
 
 CONTROLLERS = {
     'GAMEPAD' : 'SCREW',
-    'DRUMS' : 'JACK'
+    'DRUMS' : 'JACK',
+    'GUITAR' : 'LOCK'
 }
 
 class Car:
@@ -337,9 +338,7 @@ class Car:
                             actQuestNo += 1
                         elif actQuestNo == 0:
                             pass
-                        elif not self.anyInputPressed(inputHandler.drums.input):
-                            pass
-                        elif inputHandler.drums.input[actQuestNo - 1]:
+                        elif not self.anyInputPressed(inputHandler.guitar.input):
                             pass
                         else:
                             actQuestNo = 0

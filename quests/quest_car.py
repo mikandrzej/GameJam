@@ -124,17 +124,28 @@ QUESTS_CAR = {
     },
     "GUITAR" : {
         "RED" : [
-            CtrlInp.PEDAL,
             CtrlInp.RED,
             CtrlInp.BLUE,
             CtrlInp.GREEN,
             CtrlInp.YELLOW
         ],
         "BLUE" : [
+            CtrlInp.RED,
+            CtrlInp.BLUE,
+            CtrlInp.GREEN,
+            CtrlInp.YELLOW
         ],
         "GREEN" : [
+            CtrlInp.RED,
+            CtrlInp.BLUE,
+            CtrlInp.GREEN,
+            CtrlInp.YELLOW
         ],
         "VIOLET" : [
+            CtrlInp.RED,
+            CtrlInp.BLUE,
+            CtrlInp.GREEN,
+            CtrlInp.YELLOW
         ]
     }
 }

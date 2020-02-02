@@ -45,7 +45,7 @@ class Guitar(Controller):
         for event in events:
             if self.initState is False and hasattr(event, "joy") and event.joy == self.joystick.get_id():
                 if event.type == pygame.JOYBUTTONDOWN:
-                    pass
+                    self.input[event.button] = True
                 if event.type == pygame.JOYHATMOTION:
                     if event.value in self.GUITAR_HAT_MAP.keys():
                         genericButtons[self.GUITAR_HAT_MAP[event.value]] = True
