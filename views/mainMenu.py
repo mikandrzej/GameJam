@@ -6,13 +6,15 @@ from controllers.inputhandler import InputHandler
 from properties import Properties
 from state import State, GameState, ScreenState
 from utils import Utils
+from views.bookstand import Bookstand
 
 
 class MainMenu:
     VMARGIN_OPTIONS = 0.4
     VMARGIN_TITLE = 0.1
 
-    def __init__(self, properties: Properties, state: State):
+    def __init__(self, properties: Properties, state: State, bookstand: Bookstand):
+        self.bookstand = bookstand
         self.state = state
         self.mainMenu = [("Start Game", self.startNewGame), ("Exit", self.exitGame)]
         self.pauseOptions = [("Start New Game", self.startNewGame), ("Resume game", self.resumeGame), ("Exit", self.exitGame)]
@@ -55,6 +57,7 @@ class MainMenu:
         self.options = self.pauseOptions
         self.state.screenState = ScreenState.RUNNING
         self.state.gameState = GameState.CONTROLLER_SELECTION
+        self.bookstand.__init__(self.properties, self.state)
 
     def resumeGame(self):
         self.state.screenState = ScreenState.RUNNING
