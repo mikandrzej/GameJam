@@ -84,37 +84,37 @@ class Bookstand:
             if self._objects[self._selectedObject] != None:
                 self._objects[self._selectedObject].draw(surface)
 
-    def update(self, controller: InputHandler):
+    def update(self, inputHandler: InputHandler):
         if self._state.gameState == GameState.SHELF:
-            if controller.getGenericButtons()[Controller.INP_RIGHT]:
+            if inputHandler.getGenericButtons()[Controller.INP_RIGHT]:
                 self._selectedObject += 1
                 self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
                 while(self._objects[self._selectedObject] == None):
                     self._selectedObject += 1
                     self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
-            if controller.getGenericButtons()[Controller.INP_LEFT]:
+            if inputHandler.getGenericButtons()[Controller.INP_LEFT]:
                 self._selectedObject -= 1
                 self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
                 while(self._objects[self._selectedObject] == None):
                     self._selectedObject -= 1
                     self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
-            if controller.getGenericButtons()[Controller.INP_DOWN]:
+            if inputHandler.getGenericButtons()[Controller.INP_DOWN]:
                 self._selectedObject += self.OBJECTS_ON_SHELF
                 self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
                 while(self._objects[self._selectedObject] == None):
                     self._selectedObject += 1
                     self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
-            if controller.getGenericButtons()[Controller.INP_UP]:
+            if inputHandler.getGenericButtons()[Controller.INP_UP]:
                 self._selectedObject -= self.OBJECTS_ON_SHELF
                 self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
                 while(self._objects[self._selectedObject] == None):
                     self._selectedObject -= 1
                     self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
             self._selectedObject %= self.OBJECTS_ON_SHELF * self.SHELFS
-            if controller.getGenericButtons()[Controller.INP_ACCEPT]:
+            if inputHandler.getGenericButtons()[Controller.INP_ACCEPT]:
                 self._state.gameState = GameState.PUZZLE
         elif self._state.gameState == GameState.PUZZLE:
-            self._objects[self._selectedObject].update(controller)
+            self._objects[self._selectedObject].update(inputHandler)
 
 
     def _drawShelf(self, surface: pygame.Surface):

@@ -57,13 +57,13 @@ class Gamepad(Controller):
         for stick in self.sticks:
             axisXVal = self.joystick.get_axis(stick[1])
             axisYVal = self.joystick.get_axis(stick[2]) * stick[3]
-            if sqrt(pow(axisXVal, 2) + pow(axisYVal, 2)) < self.DEAD_ZONE:
+            if sqrt(pow(axisXVal, 2) + pow(axisYVal, 2)) <= self.DEAD_ZONE:
                 direction = Controller.INP_STICK_STILL
-            elif axisXVal > axisYVal > -1 * axisXVal:
+            elif axisXVal >= axisYVal >= -1 * axisXVal:
                 direction = Controller.INP_RIGHT
-            elif axisYVal < axisXVal and axisYVal < -1 * axisXVal:
+            elif axisYVal <= axisXVal and axisYVal <= -1 * axisXVal:
                 direction = Controller.INP_DOWN
-            elif axisXVal < axisYVal < -1 * axisXVal:
+            elif axisXVal <= axisYVal <= -1 * axisXVal:
                 direction = Controller.INP_LEFT
             else:
                 direction = Controller.INP_UP

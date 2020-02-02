@@ -2,6 +2,7 @@ import pygame
 import color
 import os
 
+from controllers.inputhandler import InputHandler
 from controllers.controller import Controller
 from state import State, GameState
 from properties import Properties
@@ -250,20 +251,10 @@ class Car:
             col = color.COL_PUZZLE_PROGRESS_BAR_MAX
         pygame.draw.rect(surface, col, rectInner)
 
-    def update(self, controller: Controller):
-        pass
-        # self._nailTimer += self._properties.delta
-        # if self._nailTimer < 500:
-        #     self._nailType = 'RED'
-        #     self._nailProgress = 0.2
-        # elif self._nailTimer < 800:
-        #     self._nailProgress = 0.8
-        # else:
-        #     self._nailType = 'DONE'
-        #     self._nailProgress = 1
-        #
-        # if self._nailTimer > 1000:
-        #     self._nailTimer = 0
+    def update(self, inputHandler: InputHandler):
+        inp_up = inputHandler.gamepad.leftStickDirections
+        print(inp_up)
+
 
     def _recalculatePositions(self):
         if self._scrWidth != self._properties.WIDTH or self._scrHeight != self._properties.HEIGHT:
