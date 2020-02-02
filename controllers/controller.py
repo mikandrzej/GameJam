@@ -16,6 +16,7 @@ class ControllerInput:
     BAR_STILL = 9
     TILT_UP = 10
     TILT_DOWN = 11
+    TILT_STILL = 12
     all = [
         GREEN,
         RED,
@@ -29,7 +30,8 @@ class ControllerInput:
         BAR_DOWN,
         BAR_STILL,
         TILT_UP,
-        TILT_DOWN
+        TILT_DOWN,
+        TILT_STILL
     ]
 
 

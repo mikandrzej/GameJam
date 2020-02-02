@@ -30,12 +30,15 @@ class Guitar(Controller):
             ControllerInput.BAR_UP: False,
             ControllerInput.BAR_DOWN: False,
             ControllerInput.BAR_STILL: False,
-            ControllerInput.TILT_DOWN: False,
-            ControllerInput.TILT_UP: False,
         }
         self.inputMetal = {
             ControllerInput.METAL_UP: True,
             ControllerInput.METAL_DOWN: False,
+        }
+        self.inputTilt = {
+            ControllerInput.TILT_STILL: True,
+            ControllerInput.TILT_DOWN: False,
+            ControllerInput.TILT_UP: False,
         }
         self.input = self.emptyInput.copy()
 
@@ -63,9 +66,16 @@ class Guitar(Controller):
                         elif event.value < -0.25:
                             self.inputMetal[ControllerInput.METAL_UP] = True
                             self.inputMetal[ControllerInput.METAL_DOWN] = False
-
-    def handleAxises(self):
-        if self.joystick.get_axis(self.TILT_AXIS) >= 0.25:
-            self.input[ControllerInput.TILT_DOWN] = True
-        elif self.joystick.get_axis(self.TILT_AXIS) < -0.25:
-            self.input[ControllerInput.TILT_UP] = True
+                    elif event.axis == self.TILT_AXIS:
+                        if event.value >= 0.25:
+                            self.inputTilt[ControllerInput.TILT_DOWN] = True
+                            self.inputTilt[ControllerInput.TILT_STILL] = False
+                            self.inputTilt[ControllerInput.TILT_UP] = False
+                        elif 0.25 > event.value > -0.25:
+                            self.inputTilt[ControllerInput.TILT_STILL] = True
+                            self.inputTilt[ControllerInput.TILT_DOWN] = False
+                            self.inputTilt[ControllerInput.TILT_UP] = False
+                        elif event.value < -0.25:
+                            self.inputTilt[ControllerInput.TILT_UP] = True
+                            self.inputTilt[ControllerInput.TILT_STILL] = False
+                            self.inputTilt[ControllerInput.TILT_DOWN] = False
