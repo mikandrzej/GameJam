@@ -1,3 +1,5 @@
+import random
+
 import pygame
 import color
 import os
@@ -7,6 +9,12 @@ from controllers.controller import Controller
 from state import State, GameState
 from properties import Properties
 from utils import Utils
+from quests.quest_car import QUESTS_CAR
+
+CONTROLLERS = {
+    'GAMEPAD' : 'SCREW',
+    'DRUMS' : 'JACK'
+}
 
 class Car:
     ICON = pygame.image.load(os.path.join('resources', 'car_icon.png'))
@@ -35,6 +43,7 @@ class Car:
         'VIOLET'   :   pygame.image.load(os.path.join('resources', 'lock_violet.png')),
         'DONE'   :   pygame.image.load(os.path.join('resources', 'lock_done.png'))
     }
+
     CAR_X = 0.1
     CAR_Y = 0.1
     CAR_WIDTH = 0.8
@@ -76,9 +85,16 @@ class Car:
         self._scrWidth = properties.WIDTH
         self._scrHeight = properties.HEIGHT
 
-        self._jackType = 'GREEN'
-        self._screwType = 'RED'
-        self._lockType = 'RED'
+        rand = random.randrange(len(self._properties.QUEST_TYPES))
+        self._jackType = self._properties.QUEST_TYPES[rand]
+        rand = random.randrange(len(self._properties.QUEST_TYPES))
+        self._screwType = self._properties.QUEST_TYPES[rand]
+        rand = random.randrange(len(self._properties.QUEST_TYPES))
+        self._lockType = self._properties.QUEST_TYPES[rand]
+
+        self._questStatuses = {}
+        for contr in CONTROLLERS:
+            self._questStatuses[contr] = 0
 
         self._jackProgress = 0
         self._screwProgress = 0
@@ -252,8 +268,98 @@ class Car:
         pygame.draw.rect(surface, col, rectInner)
 
     def update(self, inputHandler: InputHandler):
-        inp_up = inputHandler.gamepad.leftStickDirections
-        print(inp_up)
+        for dev in CONTROLLERS:
+            if CONTROLLERS[dev] == 'SCREW':
+                if self._screwType == 'DONE':
+                    continue
+                quests = QUESTS_CAR[dev][self._screwType]
+                if len(quests) > 0:
+                    actQuestNo = self._questStatuses[dev]
+
+                    if actQuestNo < len(quests):
+                        actQuest = quests[actQuestNo]
+                        lSD = inputHandler.gamepad.leftStickDirections
+                        if lSD[actQuest]:
+                            actQuestNo += 1
+                        elif actQuestNo == 0:
+                            pass
+                        elif lSD[quests[actQuestNo - 1]]:
+                            pass
+                        else:
+                            actQuestNo = 0
+                        self._questStatuses[dev] = actQuestNo
+
+                    self._screwProgress = self._questStatuses[dev] / len(quests)
+                    if self._screwProgress == 1:
+                        self._screwType = "DONE"
+                else:
+                    self._screwType = "DONE"
+                    self._screwProgress = 1
+            elif CONTROLLERS[dev] == 'JACK':
+                if self._jackType == 'DONE':
+                    continue
+
+                quests = QUESTS_CAR[dev][self._jackType]
+                if len(quests) > 0:
+                    actQuestNo = self._questStatuses[dev]
+                    if actQuestNo < len(quests):
+                        actQuest = quests[actQuestNo]
+
+                        if inputHandler.drums.input[actQuest]:
+                            actQuestNo += 1
+                        elif actQuestNo == 0:
+                            pass
+                        elif not self.anyInputPressed(inputHandler.drums.input):
+                            pass
+                        elif inputHandler.drums.input[actQuestNo - 1]:
+                            pass
+                        else:
+                            actQuestNo = 0
+                        self._questStatuses[dev] = actQuestNo
+
+                    self._jackProgress = self._questStatuses[dev] / len(quests)
+                    if self._jackProgress == 1:
+                        self._jackType = "DONE"
+                else:
+                    self._jackType = "DONE"
+                    self._jackProgress = 1
+            elif CONTROLLERS[dev] == 'LOCK':
+                if self._lockType == 'DONE':
+                    continue
+
+                quests = QUESTS_CAR[dev][self._lockType]
+                if len(quests) > 0:
+                    actQuestNo = self._questStatuses[dev]
+                    if actQuestNo < len(quests):
+                        actQuest = quests[actQuestNo]
+
+                        if inputHandler.guitar.input[actQuest]:
+                            actQuestNo += 1
+                        elif actQuestNo == 0:
+                            pass
+                        elif not self.anyInputPressed(inputHandler.drums.input):
+                            pass
+                        elif inputHandler.drums.input[actQuestNo - 1]:
+                            pass
+                        else:
+                            actQuestNo = 0
+                        self._questStatuses[dev] = actQuestNo
+
+                    self._lockProgress = self._questStatuses[dev] / len(quests)
+                    if self._lockProgress == 1:
+                        self._lockType = "DONE"
+                else:
+                    self._lockType = "DONE"
+                    self._jackProgress = 1
+
+    def anyInputPressed(self, input):
+        retval = False
+        for key, val in input.items():
+            retval = retval or val
+        return retval
+
+
+
 
 
     def _recalculatePositions(self):

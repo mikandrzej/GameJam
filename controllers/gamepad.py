@@ -14,14 +14,14 @@ class Gamepad(Controller):
             Controller.INP_RIGHT: False,
             Controller.INP_DOWN: False,
             Controller.INP_LEFT: False,
-            Controller.INP_STICK_STILL: False
+            Controller.INP_STICK_STILL: True
         }
         self.rightStickDirections = {
             Controller.INP_UP: False,
             Controller.INP_RIGHT: False,
             Controller.INP_DOWN: False,
             Controller.INP_LEFT: False,
-            Controller.INP_STICK_STILL: False
+            Controller.INP_STICK_STILL: True
         }
         self.sticks = ((self.leftStickDirections, 0, 1, -1), (self.rightStickDirections, 4, 3, -1))
 

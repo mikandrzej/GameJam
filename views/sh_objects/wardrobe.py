@@ -1,11 +1,19 @@
+import random
+
 import pygame
 import color
 from controllers.inputhandler import InputHandler
 import os
 
+from quests.quest_wardrobe import QUESTS_WARDROBE
 from state import State
 from properties import Properties
 from utils import Utils
+
+CONTROLLERS = {
+    'GAMEPAD' : 'SCREW',
+    'DRUMS' : 'NAIL'
+}
 
 class Wardrobe:
     COLOR = color.BLUE
@@ -59,9 +67,14 @@ class Wardrobe:
         self._scrWidth = properties.WIDTH
         self._scrHeight = properties.HEIGHT
 
-        self._nailTimer = 0
-        self._nailType = 'DONE'
-        self._screwType = 'DONE'
+        rand = random.randrange(len(self._properties.QUEST_TYPES))
+        self._screwType = self._properties.QUEST_TYPES[rand]
+        rand = random.randrange(len(self._properties.QUEST_TYPES))
+        self._nailType = self._properties.QUEST_TYPES[rand]
+
+        self._questStatuses = {}
+        for contr in CONTROLLERS:
+            self._questStatuses[contr] = 0
 
         self._nailProgress = 0
         self._screwProgress = 0
@@ -188,21 +201,70 @@ class Wardrobe:
             col = color.COL_PUZZLE_PROGRESS_BAR_MAX
         pygame.draw.rect(surface, col, rectInner)
 
-    def update(self, controller: InputHandler):
-        self._nailTimer += self._properties.delta
-        if self._nailTimer < 500:
-            self._nailType = 'RED'
-            self._nailProgress = 0.2
-        elif self._nailTimer < 800:
-            self._nailProgress = 0.8
-        else:
-            self._nailType = 'DONE'
-            self._nailProgress = 1
+    def update(self, inputHandler: InputHandler):
+        for dev in CONTROLLERS:
+            if CONTROLLERS[dev] == 'SCREW':
+                if self._screwType == 'DONE':
+                    continue
+                quests = QUESTS_WARDROBE[dev][self._screwType]
+                if len(quests) > 0:
+                    actQuestNo = self._questStatuses[dev]
 
-        if self._nailTimer > 1000:
-            self._nailTimer = 0
+                    if actQuestNo < len(quests):
+                        actQuest = quests[actQuestNo]
+                        lSD = inputHandler.gamepad.leftStickDirections
+                        if lSD[actQuest]:
+                            actQuestNo += 1
+                        elif actQuestNo == 0:
+                            pass
+                        elif lSD[quests[actQuestNo - 1]]:
+                            pass
+                        else:
+                            actQuestNo = 0
+                        self._questStatuses[dev] = actQuestNo
+
+                    self._screwProgress = self._questStatuses[dev] / len(quests)
+                    if self._screwProgress == 1:
+                        self._screwType = "DONE"
+                else:
+                    self._screwType = "DONE"
+                    self._screwProgress = 1
+            elif CONTROLLERS[dev] == 'NAIL':
+                if self._nailType == 'DONE':
+                    continue
+
+                quests = QUESTS_WARDROBE[dev][self._nailType]
+                if len(quests) > 0:
+                    actQuestNo = self._questStatuses[dev]
+                    if actQuestNo < len(quests):
+                        actQuest = quests[actQuestNo]
+
+                        if inputHandler.drums.input[actQuest]:
+                            actQuestNo += 1
+                        elif actQuestNo == 0:
+                            pass
+                        elif not self.anyInputPressed(inputHandler.drums.input):
+                            pass
+                        elif inputHandler.drums.input[actQuestNo - 1]:
+                            pass
+                        else:
+                            actQuestNo = 0
+                        self._questStatuses[dev] = actQuestNo
+
+                    self._nailProgress = self._questStatuses[dev] / len(quests)
+                    if self._nailProgress == 1:
+                        self._nailType = "DONE"
+                else:
+                    self._nailType = "DONE"
+                    self._nailProgress = 1
 
     def _recalculatePositions(self):
         if self._scrWidth != self._properties.WIDTH or self._scrHeight != self._properties.HEIGHT:
             self._scaleImages()
             self._calculateCoordinates()
+
+    def anyInputPressed(self, input):
+        retval = False
+        for key, val in input.items():
+            retval = retval or val
+        return retval

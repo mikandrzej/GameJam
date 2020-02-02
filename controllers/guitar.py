@@ -57,7 +57,6 @@ class Guitar(Controller):
                     self.handleAxises()
                     # print(event.axis, event.value)
                     # this metal thingy or turn
-        print(self.input)
 
     def handleAxises(self):
         # wieksze od zera down
