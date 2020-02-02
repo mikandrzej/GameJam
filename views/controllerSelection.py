@@ -16,6 +16,7 @@ class ControllerSelection:
     ICONS_SCALE_RATIO = 0.2
     VMARGIN = 0.1
     VMARGIN_LABEL = 0.5
+    XMARGIN = 0.25
 
     def __init__(self, properties: Properties, state: State):
         self.state = state
@@ -52,18 +53,14 @@ class ControllerSelection:
             self.state.gameState = GameState.SHELF
 
     def draw(self, surface: Surface):
-        x = self.blockWidth / 2
-        i = 0
-        for scaledImg in self.scaledImages:
-            centerX = x - (self.ICONS_SCALE_RATIO * self.properties.HEIGHT) / 2
-            surface.blit(scaledImg, (centerX,
+        for ind, scaledImg in enumerate(self.scaledImages):
+            x = self.blockWidth * ind + self.blockWidth * self.XMARGIN
+            surface.blit(scaledImg, (x,
                                      self.properties.HEIGHT * self.VMARGIN))
-            if self.waitingForInputFrom == i:
-                TextSurf, TextRect = Utils.textGenerator(self.labels[i], self.labelFont, color.BLACK)
-                TextRect.midtop = (centerX, self.labelY)
+            if self.waitingForInputFrom == ind:
+                TextSurf, TextRect = Utils.textGenerator(self.labels[ind], self.labelFont, color.BLACK)
+                TextRect.midtop = (self.properties.WIDTH / 2, self.labelY)
                 surface.blit(TextSurf, TextRect)
-            x += self.blockWidth
-            i += 1
 
     def recalculatePositions(self):
         self.blockWidth = self.properties.WIDTH / self.REQUIRED_CONTROLLERS
