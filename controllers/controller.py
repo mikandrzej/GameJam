@@ -1,4 +1,22 @@
+from enum import IntEnum
+
 import pygame
+
+class ControllerInput:
+    GREEN = 0
+    RED = 1
+    BLUE = 2
+    ORANGE = 5
+    YELLOW = 3
+    PEDAL = 4
+    METAL_UP = 5
+    METAL_DOWN = 6
+    BAR_UP = 7
+    BAR_DOWN = 8
+    BAR_STILL = 9
+    TILT_UP = 10
+    TILT_DOWN = 11
+
 
 
 class Controller:
