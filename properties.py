@@ -14,5 +14,7 @@ class Properties:
         self.labelControllerSelectionSize = 25
         self.labelPuzzleProgressFont = self.menuOptionsFont
         self.labelPuzzleProgressSize = 20
+        self.labelTimerFont = self.menuOptionsFont
+        self.labelTimerSize = 50
 
         self.QUEST_TYPES = ['RED', 'BLUE', 'GREEN', 'VIOLET']

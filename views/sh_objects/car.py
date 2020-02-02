@@ -104,6 +104,8 @@ class Car:
         self._scaleImages()
         self._calculateCoordinates()
 
+        self.done = False
+
     def draw(self, surface: pygame.Surface):
         self._recalculatePositions()
         surface.blit(self._scaledCar,
@@ -350,6 +352,9 @@ class Car:
                 else:
                     self._lockType = "DONE"
                     self._jackProgress = 1
+        if self._jackProgress == 1.0 and self._screwProgress == 1.0 and self._lockProgress == 1:
+            self._state.gameState = GameState.SHELF
+            self.done = True
 
     def anyInputPressed(self, input):
         retval = False

@@ -7,11 +7,14 @@ RED = pygame.Color('red')
 GREEN = pygame.Color('green')
 BLUE = pygame.Color('blue')
 ORANGE = pygame.Color('orange')
+BLUE = pygame.Color('blue')
 
 
 COL_BOOKSTAND = BLACK
 COL_SHELF = WHITE
 COL_SELECTED = BLACK
+COL_DONE = GREEN
+COL_TIMER = BLUE
 
 MENU_TEXT = BLACK
 SELECTED_MENU_TEXT = BLUE

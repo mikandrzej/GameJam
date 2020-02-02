@@ -6,6 +6,7 @@ import color
 from controllers.controller import Controller
 from controllers.inputhandler import InputHandler
 from properties import Properties
+from utils import GameTimer, Utils
 from views.sh_objects.wardrobe import Wardrobe
 from views.sh_objects.car import Car
 from state import State, GameState
@@ -15,6 +16,8 @@ OBJECTS = [
     Wardrobe,
     Car
 ]
+
+
 
 class Bookstand:
     POS_X = 0.1
@@ -29,12 +32,19 @@ class Bookstand:
     OBJECTS_ON_SHELF = 4
     SELECTED_RECT_OFFSET = 0.01
     SELECTED_RECT_WIDTH = 0.01
+    DONE_STR = "Done!"
+
+    TIMER_X = 0.7
+    TIMER_Y = 0.1
+    DONE_X = 0.4
+    DONE_Y = 0.2
 
     def __init__(self, properties: Properties, state: State):
         self._properties = properties
         self._scrWidth = properties.WIDTH
         self._scrHeight = properties.HEIGHT
         self._state = state
+        self.done = False
 
         objects = []
         for x in range(self.OBJECTS_ON_SHELF * self.SHELFS):
@@ -50,6 +60,7 @@ class Bookstand:
         self._imgBookstand = pygame.image.load(os.path.join('resources', 'regal.bmp'))
 
         self._calculateCoordinates()
+        self.gameTimer = GameTimer()
 
     def _calculateCoordinates(self):
         self._shelfPositionX = self.POS_X + self.BOARD_THICKNESS
@@ -83,8 +94,32 @@ class Bookstand:
         elif self._state.gameState == GameState.PUZZLE:
             if self._objects[self._selectedObject] != None:
                 self._objects[self._selectedObject].draw(surface)
+        self._drawTime(surface)
+
+    def _drawTime(self, surface: pygame.Surface):
+        timStr = self.gameTimer.timerStr
+        self._progressFont = pygame.font.Font(self._properties.labelTimerFont,
+                                              self._properties.labelTimerSize)
+        textSurf, textRect = Utils.textGenerator(timStr,
+                                                 self._progressFont,
+                                                 color.COL_TIMER)
+        textRect.midtop = (self.TIMER_X * self._properties.WIDTH,
+                           self.TIMER_Y * self._properties.HEIGHT)
+        surface.blit(textSurf, textRect)
+        if self.done:
+            doneFont = pygame.font.Font(self._properties.labelTimerFont,
+                                                  self._properties.labelTimerSize)
+            textSurf, textRect = Utils.textGenerator(self.DONE_STR,
+                                                     doneFont,
+                                                     color.COL_TIMER)
+            textRect.midtop = (self.DONE_X * self._properties.WIDTH,
+                               self.DONE_Y * self._properties.HEIGHT)
+            surface.blit(textSurf, textRect)
+
 
     def update(self, inputHandler: InputHandler):
+        if not self.done:
+            self.gameTimer.addTime(self._properties.delta)
         if self._state.gameState == GameState.SHELF:
             if inputHandler.getGenericButtons()[Controller.INP_RIGHT]:
                 self._selectedObject += 1
@@ -115,6 +150,13 @@ class Bookstand:
                 self._state.gameState = GameState.PUZZLE
         elif self._state.gameState == GameState.PUZZLE:
             self._objects[self._selectedObject].update(inputHandler)
+        _done = True
+        for obj in self._objects:
+            if obj != None:
+                if not obj.done:
+                    _done = False
+        self.done = _done
+
 
 
     def _drawShelf(self, surface: pygame.Surface):
@@ -136,13 +178,15 @@ class Bookstand:
             # objSurface = pygame.Surface((area.width, area.height))
             # obj.draw(objSurface)
             surface.blit(obj._scaledIcon, area)
+            rect = pygame.Rect((self._objPositionsX[ind] - self.SELECTED_RECT_OFFSET) * self._properties.WIDTH,
+                               (self._objPositionsY[ind] - self.SELECTED_RECT_OFFSET) * self._properties.HEIGHT,
+                               (self._objectWidth + self.SELECTED_RECT_OFFSET * 2) * self._properties.WIDTH,
+                               (self._objectHeight + self.SELECTED_RECT_OFFSET * 2) * self._properties.HEIGHT
+                               )
             if self._selectedObject == ind:
-                rect = pygame.Rect((self._objPositionsX[ind] - self.SELECTED_RECT_OFFSET) * self._properties.WIDTH,
-                                   (self._objPositionsY[ind] - self.SELECTED_RECT_OFFSET) * self._properties.HEIGHT,
-                                   (self._objectWidth + self.SELECTED_RECT_OFFSET * 2) * self._properties.WIDTH,
-                                   (self._objectHeight + self.SELECTED_RECT_OFFSET * 2) * self._properties.HEIGHT
-                                   )
                 pygame.draw.rect(surface, color.COL_SELECTED, rect, 5)
+            elif obj.done:
+                pygame.draw.rect(surface, color.COL_DONE, rect, 5)
 
     def recalculatePositions(self):
         if self._scrWidth != self._properties.WIDTH or self._scrHeight != self._properties.HEIGHT:

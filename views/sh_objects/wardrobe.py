@@ -6,7 +6,7 @@ from controllers.inputhandler import InputHandler
 import os
 
 from quests.quest_wardrobe import QUESTS_WARDROBE
-from state import State
+from state import State, GameState
 from properties import Properties
 from utils import Utils
 
@@ -81,6 +81,8 @@ class Wardrobe:
 
         self._scaleImages()
         self._calculateCoordinates()
+
+        self.done = False
 
     def draw(self, surface: pygame.Surface):
         self._recalculatePositions()
@@ -257,6 +259,9 @@ class Wardrobe:
                 else:
                     self._nailType = "DONE"
                     self._nailProgress = 1
+        if self._nailProgress == 1.0 and self._screwProgress == 1.0:
+            self._state.gameState = GameState.SHELF
+            self.done = True
 
     def _recalculatePositions(self):
         if self._scrWidth != self._properties.WIDTH or self._scrHeight != self._properties.HEIGHT:
