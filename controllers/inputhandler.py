@@ -26,7 +26,7 @@ class InputHandler:
         }
         self.genericButtons = self.emptyGenericButtons.copy()
         self.joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
-        self.activeJoysticks = [False, False, False]
+        self.activeJoysticks = pygame.joystick.get_count() * [False]
         for joy in self.joysticks:
             joy.init()
 
@@ -37,7 +37,7 @@ class InputHandler:
 
     def handleEvents(self, events):
         if False in self.activeJoysticks:
-            self.activeJoysticks = [False, False, False]
+            self.activeJoysticks = pygame.joystick.get_count() * [False]
             self.initControllers(events)
 
         self.genericButtons = self.emptyGenericButtons.copy()
