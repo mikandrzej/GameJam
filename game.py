@@ -23,8 +23,8 @@ class Game:
                                               pygame.RESIZABLE)
         pygame.display.set_caption(properties.GAME_TITLE)
         self.clock = pygame.time.Clock()  ## For syncing the FPS
-        self.mainMenu = MainMenu(self.properties, self.state)
         self.bookstand = Bookstand(self.properties, self.state)
+        self.mainMenu = MainMenu(self.properties, self.state, self.bookstand)
         self.controller = InputHandler()
         self.controllerSelection = ControllerSelection(self.properties, self.state)
 
