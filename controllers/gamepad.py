@@ -23,7 +23,7 @@ class Gamepad(Controller):
             Controller.INP_LEFT: False,
             Controller.INP_STICK_STILL: True
         }
-        self.sticks = ((self.leftStickDirections, 0, 1, -1), (self.rightStickDirections, 4, 3, -1))
+        self.sticks = ([self.leftStickDirections, 0, 1, -1, 0, 0], [self.rightStickDirections, 4, 3, -1, 0, 0])
 
     GAMEPAD_MAP = {
         0: Controller.INP_ACCEPT,
@@ -49,14 +49,20 @@ class Gamepad(Controller):
                     if event.value in self.GAMEPAD_HAT_MAP.keys():
                         genericButtons[self.GAMEPAD_HAT_MAP[event.value]] = True
                 if event.type == pygame.JOYAXISMOTION:
-                    self.handleAxises()
-        # print(self.rightStickDirections)
-        # print(self.leftStickDirections)
+                    if event.axis == 0:
+                        self.sticks[0][4] = event.value
+                    elif event.axis == 1:
+                        self.sticks[0][5] = event.value
+                    if event.axis == 4:
+                        self.sticks[1][5] = event.value
+                    elif event.axis == 3:
+                        self.sticks[1][4] = event.value
+        self.handleAxises()
 
     def handleAxises(self):
         for stick in self.sticks:
-            axisXVal = self.joystick.get_axis(stick[1])
-            axisYVal = self.joystick.get_axis(stick[2]) * stick[3]
+            axisXVal = stick[4]
+            axisYVal = stick[5] * stick[3]
             if sqrt(pow(axisXVal, 2) + pow(axisYVal, 2)) <= self.DEAD_ZONE:
                 direction = Controller.INP_STICK_STILL
             elif axisXVal >= axisYVal >= -1 * axisXVal:
