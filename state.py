@@ -25,7 +25,3 @@ class State:
         elif self.screenState == ScreenState.RUNNING:
             self.screenState = ScreenState.MAIN_MENU
 
-    def handleGameState(self, event):
-        possibleState = event.key % 48
-        if possibleState in range(1, 3):
-            self.gameState = possibleState

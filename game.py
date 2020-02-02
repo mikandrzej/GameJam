@@ -33,8 +33,6 @@ class Game:
         events = pygame.event.get()
         self.controller.handleEvents(events)
         for event in events:  # gets all the events which have occured till now and keeps tab of them.
-            if event.type == pygame.KEYDOWN:
-                self.state.handleGameState(event)
             if event.type == pygame.QUIT:
                 self.state.mainLoopRunning = False
             if event.type == pygame.VIDEORESIZE:
