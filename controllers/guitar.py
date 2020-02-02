@@ -27,13 +27,15 @@ class Guitar(Controller):
             ControllerInput.BLUE: False,
             ControllerInput.ORANGE: False,
             ControllerInput.YELLOW: False,
-            ControllerInput.METAL_UP: False,
-            ControllerInput.METAL_DOWN: False,
             ControllerInput.BAR_UP: False,
             ControllerInput.BAR_DOWN: False,
             ControllerInput.BAR_STILL: False,
             ControllerInput.TILT_DOWN: False,
             ControllerInput.TILT_UP: False,
+        }
+        self.inputMetal = {
+            ControllerInput.METAL_UP: True,
+            ControllerInput.METAL_DOWN: False,
         }
         self.input = self.emptyInput.copy()
 
@@ -54,17 +56,15 @@ class Guitar(Controller):
                         else:
                             self.input[ControllerInput.BAR_STILL] = True
                 if event.type == pygame.JOYAXISMOTION:
-                    self.handleAxises()
-                    # print(event.axis, event.value)
-                    # this metal thingy or turn
-        print(self.input)
+                    if event.axis == self.METAL_AXIS:
+                        if event.value >= 0.25:
+                            self.inputMetal[ControllerInput.METAL_DOWN] = True
+                            self.inputMetal[ControllerInput.METAL_UP] = False
+                        elif event.value < -0.25:
+                            self.inputMetal[ControllerInput.METAL_UP] = True
+                            self.inputMetal[ControllerInput.METAL_DOWN] = False
 
     def handleAxises(self):
-        # wieksze od zera down
-        if self.joystick.get_axis(self.METAL_AXIS) >= 0.25:
-            self.input[ControllerInput.METAL_DOWN] = True
-        elif self.joystick.get_axis(self.METAL_AXIS) < -0.25:
-            self.input[ControllerInput.METAL_UP] = True
         if self.joystick.get_axis(self.TILT_AXIS) >= 0.25:
             self.input[ControllerInput.TILT_DOWN] = True
         elif self.joystick.get_axis(self.TILT_AXIS) < -0.25:
